@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth';
 import type { UserRole } from '@/types/auth';
 import React, { Suspense, lazy } from 'react';
 import { Spin } from 'antd';
+import { MainLayout } from '@/layouts/MainLayout';
 
 const TestPage = lazy(() => import('@/pages/TestPage').then(m => ({ default: m.TestPage })));
 const Login = lazy(() => import('@/pages/Login').then(m => ({ default: m.Login })));
@@ -28,6 +29,7 @@ const ProtectedRoute: React.FC<{ allowedRoles?: UserRole[] }> = ({ allowedRoles 
 
   return (
     <Suspense fallback={<LoadingFallback />}>
+      {user && <MainLayout user={user} />}
       <Outlet />
     </Suspense>
   );
@@ -48,6 +50,26 @@ const PublicRoute: React.FC = () => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
+const RootRedirect: React.FC = () => {
+  const { user } = useAuthStore();
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  switch (user.type) {
+    case 'sales':
+      return <Navigate to="/sales/customers" replace />;
+    case 'purchasing':
+      return <Navigate to="/purchase/suppliers" replace />;
+    case 'manager':
+      return <Navigate to="/manager/dashboard" replace />;
+    default:
+      return <Navigate to="/login" replace />;
+  }
+};
+
 export const router = createBrowserRouter([
   {
     path: '/login',
@@ -64,7 +86,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <TestPage />,
+        element: <RootRedirect />,
       },
       {
         path: '/sales',

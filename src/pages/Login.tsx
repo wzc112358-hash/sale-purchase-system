@@ -40,7 +40,6 @@ export const Login: React.FC = () => {
     >
       <Card
         style={{ width: 400 }}
-        bordered={false}
       >
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <h1 style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 8 }}>

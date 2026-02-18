@@ -1,50 +1,129 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+  Sync Impact Report
+  =================
+  Version Change: N/A → 1.0.0 (Initial Constitution)
+  
+  Added Sections:
+  - I. TypeScript-First Development
+  - II. Component-Based Architecture
+  - III. Role-Based Access Control
+  - IV. Data Integrity
+  - V. UI/UX Standards
+  - Technical Standards Section
+  - Development Workflow Section
+  
+  Templates Updated: None (this is the initial constitution)
+  
+  Rationale: Creating project constitution based on 需求文档汇总.md
+-->
+
+# 企业采购销售管理系统 Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. TypeScript-First Development
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+All code MUST be written in TypeScript with explicit type annotations. The use of `any` type is prohibited except where absolutely necessary. All interfaces and types MUST be properly defined in the `src/types/` directory.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Rationale**: TypeScript provides compile-time type safety, reduces runtime errors, and improves code maintainability for enterprise applications.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Component-Based Architecture
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+All UI elements MUST be implemented as reusable React components. Components MUST follow single responsibility principle and be placed in appropriate directories:
+- Layout components in `src/layouts/`
+- Page components in `src/pages/`
+- Common components in `src/components/`
+- Feature-specific components in feature directories
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: Promotes code reuse, easier testing, and maintainability.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Role-Based Access Control
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+The system MUST enforce role-based access control (RBAC) with three roles: sales, purchasing, and manager. Access permissions MUST be defined in the permission matrix and enforced at both route and data levels.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: Required by business requirements to ensure data isolation between departments.
+
+### IV. Data Integrity
+
+All data operations MUST follow the defined data model in 需求文档汇总.md. Calculated fields (e.g., execution_percent, receipt_percent) MUST be automatically computed. All monetary values MUST use number type with two decimal places.
+
+**Rationale**: Ensures data consistency and accuracy required for business operations.
+
+### V. UI/UX Standards
+
+All UI components MUST follow the design standards defined in 需求文档汇总.md Part 4:
+- Color palette: #FFFFFF background, #333333 primary text, #1A1A1A primary buttons
+- Typography: Sans-serif fonts (Inter, PingFang SC, Helvetica)
+- Layout: Fixed 280px sidebar, responsive breakpoints at 1200px and 767px
+
+**Rationale**: Ensures consistent professional appearance across the application.
+
+## Technical Standards
+
+### Technology Stack Requirements
+
+| Category | Requirement |
+|----------|-------------|
+| Language | TypeScript 5.x |
+| Framework | React 18+ |
+| Build Tool | Vite |
+| UI Library | Ant Design |
+| State Management | Zustand or React Context |
+| Routing | react-router-dom v6 |
+| Backend | PocketBase |
+
+### API Standards
+
+- All API calls MUST be wrapped in dedicated API modules under `src/api/`
+- PocketBase SDK pattern MUST be followed for all collections
+- Authentication via Bearer Token (JWT)
+
+### Code Quality
+
+- All components MUST use explicit Prop types with interfaces
+- No inline styles (use CSS Modules or Ant Design theme)
+- ESLint and TypeScript checks MUST pass before commit
+- Build must succeed without errors
+
+## Development Workflow
+
+### Feature Development Process
+
+1. Specification Phase: Create spec.md in specs/[feature]/
+2. Planning Phase: Create plan.md with technical decisions
+3. Task Generation Phase: Create tasks.md with actionable items
+4. Implementation Phase: Implement according to tasks
+5. Validation Phase: Run typecheck and lint
+
+### Required Validation
+
+Before any feature is considered complete:
+- `npm run build` MUST succeed
+- `npm run lint` MUST pass with no errors
+
+### Feature Branch Naming
+
+Features MUST follow the pattern: `[number]-[feature-name]`
+Example: `05-system-layout`, `06-sales-customer`
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### Constitution Amendments
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+This constitution can be amended through the following process:
+1. Propose changes with rationale
+2. Document impact on existing features
+3. Update version following semantic versioning
+4. All team members must be notified of changes
+
+### Versioning Policy
+
+- MAJOR: Backward incompatible changes to core principles
+- MINOR: New principles or materially expanded guidance
+- PATCH: Clarifications, wording fixes, non-semantic refinements
+
+### Compliance
+
+All project contributors MUST verify compliance with this constitution. Any violations MUST be justified and documented in the complexity tracking section of plan.md.
+
+**Version**: 1.0.0 | **Ratified**: 2026-02-18 | **Last Amended**: 2026-02-18
