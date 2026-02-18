@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, message, Card } from 'antd';
+import { Form, Input, Button, App, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAuthStore } from '@/stores/auth';
 
@@ -13,6 +13,7 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const { message } = App.useApp();
 
   const handleSubmit = async (values: LoginFormValues) => {
     setLoading(true);

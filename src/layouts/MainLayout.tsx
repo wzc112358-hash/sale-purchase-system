@@ -57,9 +57,10 @@ const MENU_CONFIG: Record<UserRole, MenuConfig[]> = {
 
 interface MainLayoutProps {
   user: User;
+  children?: React.ReactNode;
 }
 
-export const MainLayout: React.FC<MainLayoutProps> = ({ user }) => {
+export const MainLayout: React.FC<MainLayoutProps> = ({ user, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
@@ -179,7 +180,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ user }) => {
             minHeight: 280,
           }}
         >
-          <Outlet />
+          {children || <Outlet />}
         </Content>
       </Layout>
     </Layout>

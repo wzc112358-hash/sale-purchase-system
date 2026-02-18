@@ -7,6 +7,8 @@ import { MainLayout } from '@/layouts/MainLayout';
 
 const TestPage = lazy(() => import('@/pages/TestPage').then(m => ({ default: m.TestPage })));
 const Login = lazy(() => import('@/pages/Login').then(m => ({ default: m.Login })));
+const CustomerList = lazy(() => import('@/pages/sales/customers/CustomerList').then(m => ({ default: m.CustomerList })));
+const CustomerDetail = lazy(() => import('@/pages/sales/customers/CustomerDetail').then(m => ({ default: m.CustomerDetail })));
 
 // eslint-disable-next-line react-refresh/only-export-components
 const LoadingFallback: React.FC = () => (
@@ -27,11 +29,16 @@ const ProtectedRoute: React.FC<{ allowedRoles?: UserRole[] }> = ({ allowedRoles 
     return <Navigate to="/" replace />;
   }
 
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      {user && <MainLayout user={user} />}
-      <Outlet />
-    </Suspense>
+    <MainLayout user={user}>
+      <Suspense fallback={<LoadingFallback />}>
+        <Outlet />
+      </Suspense>
+    </MainLayout>
   );
 };
 
@@ -93,7 +100,11 @@ export const router = createBrowserRouter([
         children: [
           {
             path: 'customers',
-            element: <TestPage />,
+            element: <CustomerList />,
+          },
+          {
+            path: 'customers/:id',
+            element: <CustomerDetail />,
           },
           {
             path: 'contracts',
