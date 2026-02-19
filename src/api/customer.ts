@@ -1,4 +1,7 @@
-import { pb } from '@/lib/pocketbase';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('http://127.0.0.1:8090');
+
 import type { Customer, CustomerFormData, CustomerListParams, SalesContract } from '@/types/customer';
 
 export const CustomerAPI = {
@@ -17,7 +20,6 @@ export const CustomerAPI = {
       params.per_page || 10,
       {
         filter: filters.join(' && '),
-        sort: '-created',
       }
     );
   },
