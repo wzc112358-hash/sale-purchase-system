@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, Descriptions, Table, Progress, Spin, Row, Col, App, Space } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Card, Descriptions, Table, Progress, Spin, Row, Col, App, Flex, Button } from 'antd';
+import { DownloadOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { SalesContractAPI } from '@/api/sales-contract';
 import type { SalesContract, SalesShipment, SaleInvoice, SaleReceipt } from '@/types/sales-contract';
 
@@ -13,6 +13,7 @@ const statusMap: Record<string, { text: string; color: string }> = {
 
 export const ContractDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { message } = App.useApp();
   const [contract, setContract] = useState<SalesContract | null>(null);
   const [shipments, setShipments] = useState<SalesShipment[]>([]);
@@ -96,6 +97,13 @@ export const ContractDetail: React.FC = () => {
 
   return (
     <div style={{ padding: 24 }}>
+      <Button
+        icon={<ArrowLeftOutlined />}
+        onClick={() => navigate('/sales/contracts')}
+        style={{ marginBottom: 16 }}
+      >
+        返回列表
+      </Button>
       <Card title="合同基本信息" style={{ marginBottom: 16 }}>
         <Descriptions column={2}>
           <Descriptions.Item label="合同编号">{contract.no}</Descriptions.Item>
@@ -111,7 +119,7 @@ export const ContractDetail: React.FC = () => {
           <Descriptions.Item label="备注" span={2}>{contract.remark || '-'}</Descriptions.Item>
           <Descriptions.Item label="合同附件" span={2}>
             {contract.attachments ? (
-              <Space direction="vertical" size="small">
+              <Flex vertical gap="small">
                 {Array.isArray(contract.attachments)
                   ? contract.attachments.map((file: string) => (
                       <a
@@ -134,7 +142,7 @@ export const ContractDetail: React.FC = () => {
                         <DownloadOutlined /> {contract.attachments as unknown as string}
                       </a>
                     )}
-              </Space>
+              </Flex>
             ) : (
               '-'
             )}

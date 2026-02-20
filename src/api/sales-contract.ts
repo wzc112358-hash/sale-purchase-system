@@ -1,6 +1,4 @@
-import PocketBase from 'pocketbase';
-
-const pb = new PocketBase('http://127.0.0.1:8090');
+import { pb } from '@/lib/pocketbase';
 
 import type { 
   SalesContract, 
@@ -13,11 +11,34 @@ import type {
 
 export const SalesContractAPI = {
   list: async (params: SalesContractListParams = {}) => {
-    return pb.collection('sales_contracts').getList<SalesContract>(
+    const result = await pb.collection('sales_contracts').getList<SalesContract>(
       params.page || 1,
-      params.per_page || 10,
+      params.per_page || 500,
       {}
     );
+
+    let filtered = result.items;
+
+    if (params.search) {
+      const s = params.search.toLowerCase();
+      filtered = filtered.filter((i) => 
+        i.no?.toLowerCase().includes(s) || i.product_name?.toLowerCase().includes(s)
+      );
+    }
+
+    if (params.status) {
+      filtered = filtered.filter((i) => i.status === params.status);
+    }
+
+    const page = params.page || 1;
+    const perPage = params.per_page || 10;
+    const start = (page - 1) * perPage;
+
+    return {
+      ...result,
+      items: filtered.slice(start, start + perPage),
+      totalItems: filtered.length,
+    };
   },
 
   getById: async (id: string) => {

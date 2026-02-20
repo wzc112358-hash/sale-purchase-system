@@ -11,6 +11,8 @@ const CustomerList = lazy(() => import('@/pages/sales/customers/CustomerList').t
 const CustomerDetail = lazy(() => import('@/pages/sales/customers/CustomerDetail').then(m => ({ default: m.CustomerDetail })));
 const ContractList = lazy(() => import('@/pages/sales/contracts/ContractList').then(m => ({ default: m.ContractList })));
 const ContractDetail = lazy(() => import('@/pages/sales/contracts/ContractDetail').then(m => ({ default: m.ContractDetail })));
+const ShipmentList = lazy(() => import('@/pages/sales/shipments/ShipmentList').then(m => ({ default: m.ShipmentList })));
+const ShipmentDetail = lazy(() => import('@/pages/sales/shipments/ShipmentDetail').then(m => ({ default: m.ShipmentDetail })));
 
 // eslint-disable-next-line react-refresh/only-export-components
 const LoadingFallback: React.FC = () => (
@@ -115,6 +117,14 @@ export const router = createBrowserRouter([
           {
             path: 'contracts/:id',
             element: <ContractDetail />,
+          },
+          {
+            path: 'shipments',
+            element: <ShipmentList />,
+          },
+          {
+            path: 'shipments/:id',
+            element: <ShipmentDetail />,
           },
           {
             path: 'invoices',
