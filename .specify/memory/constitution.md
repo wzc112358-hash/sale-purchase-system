@@ -78,6 +78,65 @@ All UI components MUST follow the design standards defined in 需求文档汇总
 - PocketBase SDK pattern MUST be followed for all collections
 - Authentication via Bearer Token (JWT)
 
+### Error Handling Standards
+
+When using PocketBase SDK in React components with `useEffect`, requests may be automatically aborted when the component unmounts. This causes `ClientResponseError` with status 0. To prevent error popups for these expected cancellations:
+
+```typescript
+// Good: Check for aborted requests
+try {
+  const result = await pb.collection('xxx').getList(...);
+} catch (error) {
+  const err = error as { response?: { status?: number }; message?: string };
+  // Ignore aborted requests (component unmounted during request)
+  if (err.response?.status === 0 || err.message?.includes('aborted')) {
+    return;
+  }
+  // Handle actual errors
+  console.error('Fetch error:', error);
+  message.error('加载失败');
+}
+```
+
+**Rationale**: Prevents confusing error messages when components unmount during async operations, which is normal React behavior.
+
+### Ant Design Form File Upload
+
+When using Ant Design's `Upload` component inside a `Form`, you MUST properly configure the `Form.Item` to handle file uploads:
+
+```tsx
+// Good: Add valuePropName and getValueFromEvent
+<Form.Item
+  name="attachments"
+  label="附件"
+  valuePropName="fileList"
+  getValueFromEvent={(e: { fileList?: unknown[] } | unknown[]) => {
+    if (Array.isArray(e)) return e;
+    return e?.fileList || [];
+  }}
+>
+  <Upload beforeUpload={() => false} maxCount={5}>
+    <Button icon={<UploadOutlined />}>上传附件</Button>
+  </Upload>
+</Form.Item>
+```
+
+When processing the form submission, access the file list directly from `values.attachments`:
+
+```typescript
+// Good: Access fileList directly
+const handleFinish = (values: Record<string, unknown>) => {
+  const fileList = values.attachments as { originFileObj?: File }[] | undefined;
+  const attachments = fileList?.map((f) => f.originFileObj).filter(Boolean) as File[] || [];
+  // ... rest of the code
+};
+
+// Bad: Nested fileList access (when valuePropName is missing)
+const attachments = (values.attachments as { fileList?: { originFileObj?: File }[] })?.fileList?.map(...)
+```
+
+**Rationale**: Ant Design's `Upload` component requires `valuePropName="fileList"` to properly bind with Form. Without it, the file list is not correctly stored, resulting in empty attachments on form submission.
+
 ### Code Quality
 
 - All components MUST use explicit Prop types with interfaces
@@ -126,4 +185,4 @@ This constitution can be amended through the following process:
 
 All project contributors MUST verify compliance with this constitution. Any violations MUST be justified and documented in the complexity tracking section of plan.md.
 
-**Version**: 1.0.0 | **Ratified**: 2026-02-18 | **Last Amended**: 2026-02-18
+**Version**: 1.0.0 | **Ratified**: 2026-02-18 | **Last Amended**: 2026-02-21

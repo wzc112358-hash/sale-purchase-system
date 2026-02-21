@@ -72,6 +72,8 @@ export const ShipmentForm: React.FC<ShipmentFormProps> = ({
   };
 
   const handleFinish = (values: Record<string, unknown>) => {
+    const fileList = values.attachments as { originFileObj?: File }[] | undefined;
+    const attachments = fileList?.map((f) => f.originFileObj).filter(Boolean) as File[] || [];
     const data: SalesShipmentFormData = {
       product_name: String(values.product_name || ''),
       sales_contract: String(values.sales_contract || ''),
@@ -85,7 +87,7 @@ export const ShipmentForm: React.FC<ShipmentFormProps> = ({
       freight_status: (values.freight_status as 'paid' | 'unpaid') || 'unpaid',
       invoice_status: (values.invoice_status as 'issued' | 'unissued') || 'unissued',
       remark: values.remark ? String(values.remark) : undefined,
-      attachments: (values.attachments as { fileList?: { originFileObj?: File }[] })?.fileList?.map((f) => f.originFileObj).filter(Boolean) as File[] || [],
+      attachments,
     };
     onFinish(data as unknown as Record<string, unknown>);
   };
@@ -238,10 +240,9 @@ export const ShipmentForm: React.FC<ShipmentFormProps> = ({
           <Form.Item
             name="attachments"
             label="附件"
-            getValueFromEvent={(e) => {
-              if (Array.isArray(e)) {
-                return e;
-              }
+            valuePropName="fileList"
+            getValueFromEvent={(e: { fileList?: unknown[] } | unknown[]) => {
+              if (Array.isArray(e)) return e;
               return e?.fileList || [];
             }}
           >

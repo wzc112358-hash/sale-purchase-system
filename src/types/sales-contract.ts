@@ -19,7 +19,7 @@ export interface SalesContract {
   sign_date: string;
   status: 'executing' | 'completed' | 'cancelled';
   remark?: string;
-  attachments?: string[];
+  attachments?: string | string[];
   creator: string;
   created: string;
   updated: string;
@@ -101,8 +101,41 @@ export interface SaleInvoice {
   amount: number;
   issue_date: string;
   remark?: string;
+  attachments?: string | string[];
   creator: string;
   created: string;
+  updated?: string;
+  expand?: {
+    sales_contract?: {
+      id: string;
+      no: string;
+      product_name: string;
+      uninvoiced_amount?: number;
+    };
+    creator?: {
+      id: string;
+      name: string;
+    };
+  };
+}
+
+export interface SaleInvoiceFormData {
+  no: string;
+  product_name: string;
+  sales_contract: string;
+  invoice_type: string;
+  product_amount: number;
+  amount: number;
+  issue_date: string;
+  remark?: string;
+  attachments?: File[];
+}
+
+export interface SaleInvoiceListParams {
+  page?: number;
+  per_page?: number;
+  search?: string;
+  sales_contract?: string;
 }
 
 export interface SaleReceipt {
