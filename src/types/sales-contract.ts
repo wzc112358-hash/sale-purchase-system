@@ -148,6 +148,43 @@ export interface SaleReceipt {
   method?: string;
   account?: string;
   remark?: string;
+  attachments?: string | string[];
   creator: string;
   created: string;
+  updated?: string;
+  expand?: {
+    sales_contract?: {
+      id: string;
+      no: string;
+      product_name: string;
+      total_amount: number;
+      receipted_amount?: number;
+      receipt_percent?: number;
+      debt_amount?: number;
+      debt_percent?: number;
+    };
+    creator?: {
+      id: string;
+      name: string;
+    };
+  };
+}
+
+export interface SaleReceiptFormData {
+  product_name: string;
+  sales_contract: string;
+  amount: number;
+  product_amount: number;
+  receipt_date: string;
+  method?: string;
+  account?: string;
+  remark?: string;
+  attachments?: File[];
+}
+
+export interface SaleReceiptListParams {
+  page?: number;
+  per_page?: number;
+  search?: string;
+  sales_contract?: string;
 }
